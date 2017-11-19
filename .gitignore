@@ -1,2 +1,6 @@
+# Python virtual environment
 venv
+# Vim temp files
 *.swp
+# Node js modules
+node_modules
