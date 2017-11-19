@@ -4,3 +4,9 @@ venv
 *.swp
 # Node js modules
 node_modules
+# VSCode files
+.vscode
+
+# Credential files
+intrinio_credentials.json
+postgres_config.json
