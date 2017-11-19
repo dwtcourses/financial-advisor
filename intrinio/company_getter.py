@@ -44,11 +44,11 @@ def company_to_sql_columns(comp_json):
     Args:
         comp_json : raw JSON obtained from intrinio companies API.
     Returns:
-        dictionary mapping SQL columns to values
+        dictionary mapping SQL columns to values, using dollar escaping for postgres
     """
     def get_field(field):
         """ Return 'NULL' if field is None. """
-        return comp_json[field] if comp_json[field] else 'NULL'
+        return '$${}$$'.format(comp_json[field]) if comp_json[field] else 'NULL'
 
     return {
         'company_id': get_field('cik'),
@@ -72,6 +72,7 @@ def main():
     # Retrieve all companies
     with open('companies.csv', newline='') as csvfile:
         company_reader = csv.reader(csvfile, delimiter=',', quotechar='"')
+        max_iters = 2300
         for row in company_reader:
             # Get ticker to use in GET request
             ticker = row[0]
@@ -89,13 +90,18 @@ def main():
                 with conn.cursor() as cur:
                     # Insert values into the database
                     try:
-                        cur.execute("INSERT INTO company VALUES({company_id}, $${company_name}$$, $${ceo_name}$$, $${company_description}$$, $${hq_address}$$, {num_employees}, $${sector}$$, $${industry}$$);".format(**comp_item))
+                        cur.execute("INSERT INTO company VALUES({company_id}, {company_name}, {ceo_name}, {company_description}, {hq_address}, {num_employees}, {sector}, {industry});".format(**comp_item))
                         # Check if successfully inserted
                         cur.execute("SELECT * FROM company WHERE company_id={company_id};".format(company_id=comp_item['company_id']))
                         if len(cur.fetchone()) == 0:
                             print("Error inserting company\n{}".format(comp_item))
                     except psycopg2.IntegrityError as e:
                         print("Integrity error {}:\n{}".format(e, comp_item))
+            if max_iters == 0:
+                print("Waiting...")
+                time.sleep(11 * 60)
+                print("Resuming...")
+            max_iters = (max_iters + 1) % 2300
 
 if __name__ == '__main__':
     main()
