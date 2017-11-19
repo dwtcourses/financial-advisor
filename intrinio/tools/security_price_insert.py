@@ -57,7 +57,7 @@ def security_row_to_sql_columns(row, ticker_to_id):
         'company_id': '$${}$$'.format(ticker_to_id[row[0]]) if row[0] in ticker_to_id else 'NULL'
     }
 
-def get_price(ticker, intrinio_cred):
+def get_price(ticker, limit, intrinio_cred):
     """
     Get historical price data mapped to SQL columns
 
@@ -72,7 +72,7 @@ def get_price(ticker, intrinio_cred):
     page_number = 1
     result = {}
     prices = []
-    while (len(result) == 0) or (page_number < result['total_pages']):
+    while (len(result) == 0) or (page_number < min(result['total_pages'], limit)):
         # Request data
         result = requests.get(CLOSE_PRICE_ENDPOINT.format(ticker=ticker, page_number=page_number), auth=HTTPBasicAuth(intrinio_cred['API_USER'], intrinio_cred['API_KEY'])).json()
         # Conver to SQL column names
@@ -96,10 +96,11 @@ def main():
         for row in security_reader:
             # Get ticker to search
             ticker = row[0]
+            print(ticker)
 
             # Get price data
-            prices = get_price(ticker, intrinio_cred)
-            print(ticker)
+            limit = 4
+            prices = get_price(ticker, limit, intrinio_cred)
 
             with conn.cursor() as cur:
                 cur.execute("SELECT figi_id FROM security WHERE ticker = '{ticker}'".format(ticker=ticker))
