@@ -9,9 +9,11 @@ port = 3001
 
 // Import routes
 var client_routes = require('./routes/client_routes')
+var portfolio_routes = require('./routes/portfolio_routes')
 
 // Register routes
 client_routes(app);
+portfolio_routes(app);
 
 app.listen(port)
 

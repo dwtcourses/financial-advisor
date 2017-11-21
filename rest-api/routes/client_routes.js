@@ -1,4 +1,4 @@
-/* /client routing */
+/* clients routing */
 module.exports = function(app) {
 
     var clients = require('../controllers/client_controller')
