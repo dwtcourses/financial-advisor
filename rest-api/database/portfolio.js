@@ -24,7 +24,7 @@ module.exports = class portfolio {
      * @return promise of SQL query
      */
     get(portfolio_id) {
-        let command = 'SELECT * FROM portfolio WHERE portfolio_id=$1'
+        let command = 'SELECT * FROM portfolio JOIN client ON client.client_id = portfolio.client_id WHERE portfolio_id=$1'
         let params = [portfolio_id]
         return this.db_pool.query(command, params)
     }

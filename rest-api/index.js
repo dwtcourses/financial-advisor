@@ -25,6 +25,8 @@ app.set('db', my_dao)
 /* Import and register routes */
 require('./routes/client_routes')(app)
 require('./routes/portfolio_routes')(app)
+require('./routes/security_routes')(app)
+require('./routes/company_routes')(app)
 
 /* Start server */
 port = 3001
