@@ -9,6 +9,7 @@ exports.create_portfolio = function(req, res) {
 }
 
 exports.read_portfolio = function(req, res) {
+    console.log(req.params.portfolio_id)
     return res.json('Read portfolio')
 }
 

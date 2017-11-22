@@ -1,5 +1,5 @@
 /* clients routing */
-exports = function(app) {
+module.exports = function(app) {
 
     // Import the client controller
     var client_controller = require('../controllers/client_controller')

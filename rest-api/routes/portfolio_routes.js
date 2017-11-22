@@ -1,5 +1,5 @@
 /* portfolios routing */
-exports = function(app) {
+module.exports = function(app) {
 
     // Import the portfolio controller
     var portfolio_controller = require('../controllers/portfolio_controller')
