@@ -30,7 +30,7 @@ exports.create_portfolio = async (req, res) => {
 exports.read_portfolio = async (req, res) => {
     try {
         let query_result = await req.app.get('db').portfolio.get(req.params.portfolio_id)
-        return res.json(query_result.rows)
+        return res.json(query_result.rows[0])
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error retrieving portfolio')

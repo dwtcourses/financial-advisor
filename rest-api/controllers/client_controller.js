@@ -31,7 +31,7 @@ exports.create_client = async (req, res) => {
 exports.read_client = async (req, res) => {
     try {
         let query_result = await req.app.get('db').client.get(req.params.client_id)
-        return res.json(query_result.rows)
+        return res.json(query_result.rows[0])
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error retrieving client')
