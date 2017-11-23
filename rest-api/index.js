@@ -27,6 +27,7 @@ require('./routes/client_routes')(app)
 require('./routes/portfolio_routes')(app)
 require('./routes/security_routes')(app)
 require('./routes/company_routes')(app)
+require('./routes/recommendation_routes')(app)
 
 /* Start server */
 port = 3001

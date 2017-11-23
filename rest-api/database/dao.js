@@ -4,6 +4,7 @@ Client = require('./client.js')
 Portfolio = require('./portfolio.js')
 Security = require('./security.js')
 Company = require('./company.js')
+Recommendation = require('./recommendation.js')
 
 module.exports = class MyDAO {
 
@@ -13,5 +14,6 @@ module.exports = class MyDAO {
         this.portfolio = new Portfolio(db_pool)
         this.security = new Security(db_pool)
         this.company = new Company(db_pool)
+        this.recommendation = new Recommendation(db_pool)
     }
 }
