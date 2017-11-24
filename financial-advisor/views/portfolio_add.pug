@@ -1,0 +1,22 @@
+extends layout
+
+block content
+  .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+    h1.page-header New Portfolio
+    //TODO: Use mixins
+    form(action=url, method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='client_id') Client:
+        .col-sm-10
+          select#client_id.form-control(name='client_id')
+            each client in clients
+                option(value=client.client_id)= client.client_name + ' (' + client.client_id + ')'
+      .form-group.row
+        label.col-sm-2.col-form-label(for='strategy') Strategy:
+        .col-sm-10
+          input#strategy.form-control(name='strategy')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='target_date') Target Date:
+        .col-sm-10
+          input#target_date.form-control(name='target_date', placeholder='12/31/1970')
+      button.btn.btn-primary(type='submit') Create
