@@ -1,0 +1,28 @@
+extends layout
+
+block content
+  .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+    h1.page-header Client Details
+    //TODO: Use mixins
+    form(action=url, method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='client_id') Client ID:
+        .col-sm-10
+          input#client_id.form-control(name='client_id', value=client.client_id, readonly=true)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='client_name') Client Name:
+        .col-sm-10
+          input#client_name.form-control(name='client_name', value=client.client_name, readonly)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='birthdate') Birthdate:
+        .col-sm-10
+          input#birthdate.form-control(name='birthdate', value=client.birthdate, readonly)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='country') Country:
+        .col-sm-10
+          input#country.form-control(name='country', value=client.country)
+      .form-group.row
+        label.col-sm-2.col-form-label(for='remaining_funds') Remaining Funds:
+        .col-sm-10
+          input#remaining_funds.form-control(name='remaining_funds', value=client.remaining_funds)
+      button.btn.btn-primary(type='submit') Update

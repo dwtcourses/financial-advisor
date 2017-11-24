@@ -19,8 +19,31 @@ router.get('/', async (req, res, next) => {
     }
 });
 
+/* GET clients listing. */
+router.get('/add', async (req, res, next) => {
+    return res.render('client_add')
+});
+
+/* POST create new client */
+router.post('/add', async (req, res, next) => {
+    console.log(req.body)
+    let options = {
+        uri: process.env.REST_HOST + '/clients',
+        form: req.body,
+        json: true
+    }
+    try {
+        result = await request.post(options)
+        res.redirect('/clients/')
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error creating client ' + client_id)
+    }
+});
+
+
 /* GET client details */
-router.get('/:client_id', async (req, res, next) => {
+router.get('/details/:client_id', async (req, res, next) => {
     let options = {
         uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
         json: true
@@ -35,7 +58,7 @@ router.get('/:client_id', async (req, res, next) => {
 });
 
 /* POST update client details */
-router.post('/:client_id', async (req, res, next) => {
+router.post('/details/:client_id', async (req, res, next) => {
     console.log(req.body)
     let options = {
         uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
@@ -44,7 +67,7 @@ router.post('/:client_id', async (req, res, next) => {
     }
     try {
         result = await request.put(options)
-        res.redirect('/clients/' + req.params.client_id)
+        res.redirect('/clients/details/' + req.params.client_id)
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error updating client ' + client_id)
