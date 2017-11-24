@@ -1,0 +1,29 @@
+extends layout
+
+block content
+  .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+    h1.page-header Clients
+    .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Client ID
+              th Name
+              th Birthdate
+              th Country
+              th Remaining Funds
+              th Update
+          tbody
+            each val in clients
+              tr
+                td= val.client_id
+                td= val.client_name
+                td= val.birthdate.slice(0, 10)
+                td= val.country
+                td= val.remaining_funds
+                td
+                  a(href='/clients/' + val.client_id) Update
+                //- th ${val.value} Current value based on stock prices
+
+
+
