@@ -3,29 +3,30 @@ extends layout
 block content
   .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
     h1.page-header Portfolio Details
-    form(action='/portfolio/' + portfolio.portfolio_id, method=PUT)
+    //TODO: Use mixins
+    form(action=url, method='post')
       .form-group.row
         label.col-sm-2.col-form-label(for='portfolio_id') Portfolio ID:
         .col-sm-10
-          input#portfolio_id.form-control(type="text", value=portfolio.portfolio_id, readonly)
+          input#portfolio_id.form-control(name='portfolio_id', value=portfolio.portfolio_id, readonly)
       .form-group.row
         label.col-sm-2.col-form-label(for='client_id') Client ID:
         .col-sm-10
-          input#client_id.form-control(value=portfolio.client_id, readonly=true)
+          input#client_id.form-control(name='client_id', value=portfolio.client_id, readonly=true)
       .form-group.row
         label.col-sm-2.col-form-label(for='client_name') Client Name:
         .col-sm-10
-          input#client_name.form-control(value=portfolio.client_name, readonly)
+          input#client_name.form-control(name='client_name', value=portfolio.client_name, readonly)
       .form-group.row
         label.col-sm-2.col-form-label(for='target_date') Target Date:
         .col-sm-10
-          input#target_date.form-control(value=portfolio.target_date)
+          input#target_date.form-control(name='target_date', value=portfolio.target_date)
       .form-group.row
         label.col-sm-2.col-form-label(for='strategy') Strategy:
         .col-sm-10
-          input#strategy.form-control(value=portfolio.strategy)
+          input#strategy.form-control(name='strategy', value=portfolio.strategy)
       .form-group.row
         label.col-sm-2.col-form-label(for='remaining_funds') Remaining Funds:
         .col-sm-10
-          input#remaining_funds.form-control(value=portfolio.remaining_funds, readonly)
+          input#remaining_funds.form-control(name='remaining_funds', value=portfolio.remaining_funds, readonly)
       button.btn.btn-primary(type='submit') Update

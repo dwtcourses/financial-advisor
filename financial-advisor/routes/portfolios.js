@@ -26,11 +26,27 @@ router.get('/:portfolio_id', async (req, res, next) => {
         json: true
     }
     try {
-        result = await request.get(options);
-        res.render('portfolio_detail', { portfolio: result });
+        result = await request.get(options)
+        res.render('portfolio_detail', { portfolio: result, put_url: '/portfolios/' + req.params.portfolio_id });
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error getting portfolio ' + portfolio_id)
+    }
+});
+
+router.post('/:portfolio_id', async (req, res, next) => {
+    console.log(req.body)
+    let options = {
+        uri: process.env.REST_HOST + '/portfolios/' + req.params.portfolio_id,
+        form: req.body,
+        json: true
+    }
+    try {
+        result = await request.put(options)
+        res.redirect('/portfolios/' + req.params.portfolio_id)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error updating portfolio ' + portfolio_id)
     }
 });
 
