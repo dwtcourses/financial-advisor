@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-/* GET clients listing. */
+/* GET clients add new page */
 router.get('/add', async (req, res, next) => {
     return res.render('client_add')
 });
@@ -37,7 +37,7 @@ router.post('/add', async (req, res, next) => {
         res.redirect('/clients/')
     } catch (err) {
         console.log(err)
-        return res.status(500).json('Error creating client ' + client_id)
+        return res.status(500).json('Error creating client')
     }
 });
 
@@ -53,7 +53,7 @@ router.get('/details/:client_id', async (req, res, next) => {
         res.render('client_detail', { client: result });
     } catch (err) {
         console.log(err)
-        return res.status(500).json('Error getting portfolio ' + client_id)
+        return res.status(500).json('Error getting clients')
     }
 });
 
@@ -70,7 +70,7 @@ router.post('/details/:client_id', async (req, res, next) => {
         res.redirect('/clients/details/' + req.params.client_id)
     } catch (err) {
         console.log(err)
-        return res.status(500).json('Error updating client ' + client_id)
+        return res.status(500).json('Error updating client ' + req.params.client_id)
     }
 });
 
@@ -86,7 +86,7 @@ router.get('/delete/:client_id', async (req, res, next) => {
         res.redirect('/clients/')
     } catch (err) {
         console.log(err)
-        return res.status(500).json('Error deleting client ' + client_id)
+        return res.status(500).json('Error deleting client ' + req.params.client_id)
     }
 });
 
