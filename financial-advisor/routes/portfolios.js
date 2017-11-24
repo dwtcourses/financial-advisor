@@ -34,6 +34,7 @@ router.get('/:portfolio_id', async (req, res, next) => {
     }
 });
 
+/* POST update portfolio details */
 router.post('/:portfolio_id', async (req, res, next) => {
     console.log(req.body)
     let options = {

@@ -4,7 +4,7 @@ var express = require('express');
 var router = express.Router();
 var request = require('request-promise-native');
 
-/* GET portfolios listing. */
+/* GET clients listing. */
 router.get('/', async (req, res, next) => {
     let options = {
         uri: process.env.REST_HOST + '/clients',
@@ -19,7 +19,7 @@ router.get('/', async (req, res, next) => {
     }
 });
 
-/* GET portfolio details */
+/* GET client details */
 router.get('/:client_id', async (req, res, next) => {
     let options = {
         uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
@@ -33,5 +33,23 @@ router.get('/:client_id', async (req, res, next) => {
         return res.status(500).json('Error getting portfolio ' + client_id)
     }
 });
+
+/* POST update client details */
+router.post('/:client_id', async (req, res, next) => {
+    console.log(req.body)
+    let options = {
+        uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
+        form: req.body,
+        json: true
+    }
+    try {
+        result = await request.put(options)
+        res.redirect('/clients/' + req.params.client_id)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error updating client ' + client_id)
+    }
+});
+
 
 module.exports = router;
