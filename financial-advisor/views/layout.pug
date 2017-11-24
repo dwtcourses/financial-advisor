@@ -1,7 +1,27 @@
-doctype html
-html
-  head
-    title= title
-    link(rel='stylesheet', href='/stylesheets/style.css')
-  body
-    block content
+extends _bootstrap
+append styles
+  // Custom styles for this template
+  link(href='/stylesheets/dashboard.css', rel='stylesheet')
+block body
+  nav.navbar.navbar-inverse.navbar-fixed-top
+    .container-fluid
+      .navbar-header
+        button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+        a.navbar-brand(href='#') Financial Advisor Dashboard
+  .container-fluid
+    .row
+      .col-sm-3.col-md-2.sidebar
+        ul.nav.nav-sidebar
+          li.active
+            a(href='#') Portfolios
+          li
+            a(href='#') Clients
+          li
+            a(href='#') Recommendations
+        ul.nav.nav-sidebar
+          li
+            a(href='') Securities
+          li
+            a(href='') Companies
+
+  block content
