@@ -2,7 +2,8 @@ extends layout
 
 block content
   .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
-    h1.page-header Clients
+    .page-header
+      h1 Clients
     .table-responsive
         table.table.table-striped
           thead
@@ -23,6 +24,8 @@ block content
                 td= val.remaining_funds
                 td
                   a(href='/clients/details/' + val.client_id) Update
+    form
+      button.btn.btn-primary(formaction='/clients/add') Add
 
 
 
