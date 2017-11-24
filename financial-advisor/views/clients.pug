@@ -14,6 +14,7 @@ block content
               th Country
               th Remaining Funds
               th Update
+              th Delete
           tbody
             each val in clients
               tr
@@ -24,6 +25,8 @@ block content
                 td= val.remaining_funds
                 td
                   a(href='/clients/details/' + val.client_id) Update
+                td
+                  a(href='/clients/delete/' + val.client_id) Delete
     form
       button.btn.btn-primary(formaction='/clients/add') Add
 

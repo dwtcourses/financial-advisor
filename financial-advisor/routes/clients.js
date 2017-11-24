@@ -74,5 +74,20 @@ router.post('/details/:client_id', async (req, res, next) => {
     }
 });
 
+/* GET delete client */
+router.get('/delete/:client_id', async (req, res, next) => {
+    console.log('HELO')
+    let options = {
+        uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
+        json: true
+    }
+    try {
+        result = await request.delete(options)
+        res.redirect('/clients/')
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error deleting client ' + client_id)
+    }
+});
 
 module.exports = router;
