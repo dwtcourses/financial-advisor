@@ -48,7 +48,7 @@ router.get('/add', async (req, res, next) => {
                     portfolios: portfolios,
                     securities: securities,
                     transaction_types: transaction_types,
-                    url: '/portfolios/add'
+                    url: '/recommendations/add'
                 })
         });
     } catch (err) {
@@ -67,10 +67,25 @@ router.post('/add', async (req, res, next) => {
     }
     try {
         result = await request.post(options)
-        res.redirect('/recommednations')
+        res.redirect('/recommendations')
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error creating recommendation')
+    }
+});
+
+/* GET delete recommendation */
+router.get('/delete/:recommendation_id', async (req, res, next) => {
+    let options = {
+        uri: process.env.REST_HOST + '/recommendations/' + req.params.recommendation_id,
+        json: true
+    }
+    try {
+        result = await request.delete(options)
+        res.redirect('/recommendations')
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error deleting recommendation ' + req.params.recommendation_id)
     }
 });
 

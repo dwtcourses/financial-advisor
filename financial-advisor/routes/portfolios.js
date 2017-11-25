@@ -84,4 +84,6 @@ router.post('/:portfolio_id', async (req, res, next) => {
     }
 });
 
+//TODO: DELETE portfolio only if no securities found
+
 module.exports = router;

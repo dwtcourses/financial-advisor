@@ -76,7 +76,6 @@ router.post('/details/:client_id', async (req, res, next) => {
 
 /* GET delete client */
 router.get('/delete/:client_id', async (req, res, next) => {
-    console.log('HELO')
     let options = {
         uri: process.env.REST_HOST + '/clients/' + req.params.client_id,
         json: true
