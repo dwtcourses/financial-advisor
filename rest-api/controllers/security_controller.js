@@ -22,3 +22,15 @@ exports.read_security = async (req, res) => {
         return res.status(500).json('Error retrieving security')
     }
 }
+
+/* Retrieve prices for single security*/
+exports.list_security_prices = async (req, res) => {
+    try {
+        let query_result = await req.app.get('db').security.get_price(req.params.figi_id)
+        return res.json(query_result.rows)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error retrieving security prices')
+    }
+}
+

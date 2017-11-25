@@ -11,4 +11,8 @@ module.exports = function(app) {
     // Single client
     app.route('/securities/:figi_id')
         .get(security_controller.read_security)
+
+    // Single client
+    app.route('/securities/:figi_id/prices')
+        .get(security_controller.list_security_prices)
 }
