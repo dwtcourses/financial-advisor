@@ -5,6 +5,66 @@ var router = express.Router()
 var request = require('request-promise-native')
 var talib = require('talib')
 
+// MACD
+function macd (values) {
+    return new Promise((resolve, reject) => {
+        talib.execute({
+            name: "MACD",
+            startIdx: 0,
+            endIdx: values.length - 1,
+            inReal: values,
+            optInFastPeriod: 12,
+            optInSlowPeriod: 26,
+            optInSignalPeriod: 9
+        }, function(err, res) {
+            resolve({
+                macd: res.result.outMACD,
+                macd_signal: res.result.outMACDSignal,
+                macd_hist: res.result.outMACDHist
+            })
+        })
+    })
+};
+
+// RSI
+function rsi (values) {
+    return new Promise((resolve, reject) => {
+        talib.execute({
+            name: "RSI",
+            startIdx: 0,
+            endIdx: values.length - 1,
+            inReal: values,
+            optInTimePeriod: 14
+        }, function (err, res) {
+            resolve({
+                rsi_data: res.result.outReal
+            })
+        })
+    })
+}
+
+// Bollinger Bands
+function bbands (values) {
+    return new Promise((resolve, reject) => {
+        talib.execute({
+            name: "BBANDS",
+            startIdx: 0,
+            endIdx: values.length - 1,
+            inReal: values,
+            optInTimePeriod: 5,
+            optInNbDevUp: 2,
+            optInNbDevDn: 2,
+            optInMAType: 0
+        }, function (err, res) {
+            resolve({
+                bband_hi: res.result.outRealUpperBand,
+                bband_mid: res.result.outRealMiddleBand,
+                bband_lo: res.result.outRealLowerBand
+            })
+        })
+    })
+}
+
 /* GET securities listing. */
 router.get('/', async (req, res, next) => {
     let options = {
@@ -32,69 +92,30 @@ router.get('/details/:figi_id', async (req, res, next) => {
         json: true
     }
     try {
-        detail_p = request.get(detail_options)
-        price_p = request.get(price_options)
-        Promise.all([detail_p, price_p]).then(values => {
-            details = values[0]
-            prices = values[1]
+        // Get detail and price of security
+        let detail_p = request.get(detail_options)
+        let price_p = request.get(price_options)
+        let result = await Promise.all([detail_p, price_p])
+        let details = result[0]
+        let prices = result[1]
+        let close_vals = prices.map(p => +p.price)
 
-            // Conver to decimals
-            close_vals = prices.map(p => +p.price)
+        // Process data to produce indices
+        let macd_data_p = macd(close_vals)
+        let rsi_p = rsi(close_vals)
+        let bbands_p = bbands(close_vals)
+        let indices = await Promise.all([macd_data_p, rsi_p, bbands_p])
+        let macd_data = indices[0]
+        let rsi_data = indices[1]
+        let bbands_data = indices[2]
 
-            // Process data to produce indices
-
-            // MACD
-            talib.execute({
-                name: "MACD",
-                startIdx: 0,
-                endIdx: close_vals.length - 1,
-                inReal: close_vals,
-                optInFastPeriod: 12,
-                optInSlowPeriod: 26,
-                optInSignalPeriod: 9
-            }, function (err, res) {
-                macd_data = {
-                    macd: res.result.outMACD,
-                    macd_signal: res.result.outMACDSignal,
-                    macd_hist: res.result.outMACDHist
-                }
-            });
-
-            // RSI
-            talib.execute({
-                name: "RSI",
-                startIdx: 0,
-                endIdx: close_vals.length - 1,
-                inReal: close_vals,
-                optInTimePeriod: 14
-            }, function (err, res) {
-                rsi_data = res.result.outReal
-            });
-
-            // Bollinger Bands
-            talib.execute({
-                name: "BBANDS",
-                startIdx: 0,
-                endIdx: close_vals.length - 1,
-                inReal: close_vals,
-                optInTimePeriod: 5,
-                optInNbDevUp: 2,
-                optInNbDevDn: 2,
-                optInMAType: 0
-            }, function (err, res) {
-                bband_data = {
-                    bband_hi: res.result.outRealUpperBand,
-                    bband_mid: res.result.outRealMiddleBand,
-                    bband_lo: res.result.outRealLowerBand
-                }
-            })
-
-            return res.render('security_detail',
-                {
-                    security: details,
-                    prices: prices
-                })
-        });
+        return res.render('security_detail', {
+            security: details,
+            prices: prices,
+            rsi: rsi_data,
+            macd: macd_data,
+            bbands: bbands_data
+        })
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error retrieving security details for ' + req.params.figi_id)
