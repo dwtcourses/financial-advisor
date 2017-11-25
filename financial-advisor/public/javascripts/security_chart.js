@@ -20,9 +20,9 @@ x.domain(d3.extent(data, function (d) {
     return d.date;
 }));
 y.domain([d3.min(data, function (d) {
-    return d.price;
+    return d.bbands_lo;
 }), d3.max(data, function (d) {
-    return d.price;
+    return d.bbands_hi;
 })]);
 
 
