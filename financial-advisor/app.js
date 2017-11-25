@@ -9,7 +9,7 @@ var index = require('./routes/index');
 var portfolios = require('./routes/portfolios');
 var clients = require('./routes/clients');
 var recommendations = require('./routes/recommendations');
-// var securities = require('./routes/securities');
+var securities = require('./routes/securities');
 // var companies = require('./routes/companies');
 //TODO: Enable all
 
@@ -31,7 +31,7 @@ app.use('/', index);
 app.use('/portfolios', portfolios);
 app.use('/clients', clients);
 app.use('/recommendations', recommendations);
-// app.use('/securities', securities);
+app.use('/securities', securities);
 // app.use('/companies', companies);
 //TODO: Enable all
 
