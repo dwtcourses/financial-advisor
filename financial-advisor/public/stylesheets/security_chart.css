@@ -21,3 +21,21 @@
     stroke: red;
     stroke-width: 1.0px;
 }
+
+#line-macd {
+    fill: none;
+    stroke: blue;
+    stroke-width: 1.5px;
+}
+
+#line-macd-signal {
+    fill: none;
+    stroke: red;
+    stroke-width: 1.5px;
+}
+
+#bar {
+    fill: none;
+    stroke: red;
+    stroke-width: 1.5px;;
+}

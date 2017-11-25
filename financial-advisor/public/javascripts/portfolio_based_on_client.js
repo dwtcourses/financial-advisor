@@ -8,7 +8,7 @@ $(document).ready(function() {
         $('#portfolio_id').empty()
         console.log('Filtered')
         $.each(options, function(key, value) {
-            var opt_string = '<option value=' + value.portfolio_id + '>' + '(' + value.portfolio_id + ') ' + value.strategy
+            let opt_string = '<option value=' + value.portfolio_id + '>' + '(' + value.portfolio_id + ') ' + value.strategy
             $('#portfolio_id').append(opt_string)
         })
     });
