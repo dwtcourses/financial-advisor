@@ -1,0 +1,59 @@
+/* Load configuration from .env file */
+require('dotenv').config()
+var express = require('express');
+var router = express.Router();
+var request = require('request-promise-native');
+
+/* GET recommendations listing. */
+router.get('/', async (req, res, next) => {
+    let options = {
+        uri: process.env.REST_HOST + '/recommendations',
+        json: true
+    }
+    try {
+        result = await request.get(options);
+        res.render('recommendations', { recommendations: result });
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error getting recommendations')
+    }
+});
+
+/* GET recommendations add new page. */
+router.get('/add', async (req, res, next) => {
+    let client_options = {
+        uri: process.env.REST_HOST + '/clients',
+        json: true
+    }
+    let portfolio_options = {
+        uri: process.env.REST_HOST + '/portfolios',
+        json: true
+    }
+    try {
+        clients = await request.get(client_options);
+        portfolio = await request.get(portfolio_options);
+        return res.render('recommendations', {clients: clients, portfolios: portfolios})
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error getting clients or portfolios')
+    }
+});
+
+/* POST create new recommendation */
+router.post('/add', async (req, res, next) => {
+    console.log(req.body)
+    let options = {
+        uri: process.env.REST_HOST + '/recommendations',
+        form: req.body,
+        json: true
+    }
+    try {
+        result = await request.post(options)
+        res.redirect('/recommednations')
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error creating recommendation')
+    }
+});
+
+module.exports = router;
