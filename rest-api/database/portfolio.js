@@ -15,7 +15,7 @@ module.exports = class portfolio {
      * @return promise of SQL query
      */
     get_all() {
-        let command = 'SELECT * FROM portfolio JOIN client ON client.client_id = portfolio.client_id'
+        let command = 'SELECT * FROM portfolio JOIN client ON client.client_id = portfolio.client_id JOIN ( SELECT PS.portfolio_id, SUM(Q.price * PS.quantity) as value FROM portfolio_security as PS JOIN price_recent as Q ON Q.figi_id = PS.figi_id GROUP BY portfolio_id) as V ON V.portfolio_id = portfolio.portfolio_id'
         return this.db_pool.query(command)
     }
 
@@ -24,7 +24,7 @@ module.exports = class portfolio {
      * @return promise of SQL query
      */
     get(portfolio_id) {
-        let command = 'SELECT * FROM portfolio JOIN client ON client.client_id = portfolio.client_id WHERE portfolio_id=$1'
+        let command = 'SELECT * FROM portfolio JOIN client ON client.client_id = portfolio.client_id JOIN ( SELECT PS.portfolio_id, SUM(Q.price * PS.quantity) as value FROM portfolio_security as PS JOIN price_recent as Q ON Q.figi_id = PS.figi_id GROUP BY portfolio_id) as V ON V.portfolio_id = portfolio.portfolio_id WHERE portfolio.portfolio_id=$1'
         let params = [portfolio_id]
         return this.db_pool.query(command, params)
     }
