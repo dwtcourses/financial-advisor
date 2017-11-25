@@ -29,10 +29,28 @@ router.get('/add', async (req, res, next) => {
         uri: process.env.REST_HOST + '/portfolios',
         json: true
     }
+    let security_options = {
+        uri: process.env.REST_HOST + '/securities',
+        json: true
+    }
     try {
-        clients = await request.get(client_options);
-        portfolio = await request.get(portfolio_options);
-        return res.render('recommendations', {clients: clients, portfolios: portfolios})
+        client_p = request.get(client_options);
+        portfolio_p = request.get(portfolio_options);
+        security_p = request.get(security_options);
+        Promise.all([client_p, portfolio_p, security_p]).then(values => {
+            clients = values[0]
+            portfolios = values[1]
+            securities = values[2]
+            transaction_types = ['Buy', 'Sell']
+            return res.render('recommendation_add',
+                {
+                    clients: clients,
+                    portfolios: portfolios,
+                    securities: securities,
+                    transaction_types: transaction_types,
+                    url: '/portfolios/add'
+                })
+        });
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error getting clients or portfolios')
