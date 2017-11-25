@@ -15,7 +15,7 @@ module.exports = class Recommendation {
      * @return promise of SQL query
      */
     get_all() {
-        let command = 'SELECT * FROM recommendation'
+        let command = 'SELECT * FROM recommendation JOIN portfolio ON portfolio.portfolio_id = recommendation.portfolio_id JOIN client ON client.client_id = portfolio.client_id JOIN security ON security.figi_id = recommendation.figi_id'
         return this.db_pool.query(command)
     }
 
@@ -24,7 +24,7 @@ module.exports = class Recommendation {
      * @return promise of SQL query
      */
     get(recommendation_id) {
-        let command = 'SELECT * FROM recommendation JOIN portfolio ON portfolio.portfolio_id = recommendation.portfolio_id JOIN client ON client.client_id = portfolio.client_id WHERE recommendation_id=$1'
+        let command = 'SELECT * FROM recommendation JOIN portfolio ON portfolio.portfolio_id = recommendation.portfolio_id JOIN client ON client.client_id = portfolio.client_id JOIN security ON security.figi_id = recommendation.figi_id WHERE recommendation_id=$1'
         let params = [recommendation_id]
         return this.db_pool.query(command, params)
     }
