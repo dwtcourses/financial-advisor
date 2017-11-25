@@ -39,3 +39,21 @@
     stroke: red;
     stroke-width: 1.5px;;
 }
+
+#line-rsi {
+    fill: none;
+    stroke: blue;
+    stroke-width: 1.5px;;
+}
+
+#thresh-rsi-low {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;;
+}
+
+#thresh-rsi-high {
+    fill: none;
+    stroke: black;
+    stroke-width: 1.5px;;
+}

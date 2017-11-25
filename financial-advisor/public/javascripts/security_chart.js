@@ -5,8 +5,8 @@ let margin = {
         bottom: 30,
         left: 50
     },
-    width = 850 - margin.left - margin.right,
-    height = 300 - margin.top - margin.bottom;
+    width = 900 - margin.left - margin.right,
+    height = 270 - margin.top - margin.bottom;
 
 // Parse date and time
 let parseTime = d3.isoParse;

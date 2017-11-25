@@ -7,6 +7,8 @@ block scripts
   script(type='text/javascript').
     var data = !{JSON.stringify(data)}
   script(src='/javascripts/security_chart.js')
+  script(src='/javascripts/macd_chart.js')
+  script(src='/javascripts/rsi_chart.js')
 
 block content
   .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
@@ -32,4 +34,9 @@ block content
               td= security.company_name
               td= security.sector
               td= security.industry
-    .div#chart
+    h3 Security Price with Bollinger Bands
+      .div#main-chart
+    h3 MACD
+      .div#macd-chart
+    h3 RSI
+      .div#rsi-chart
