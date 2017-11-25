@@ -1,19 +1,19 @@
 // Set dimensions and margins
-var margin = {
+let margin = {
         top: 20,
         right: 20,
         bottom: 30,
         left: 50
     },
-    width = 960 - margin.left - margin.right,
-    height = 500 - margin.top - margin.bottom;
+    width = 850 - margin.left - margin.right,
+    height = 300 - margin.top - margin.bottom;
 
 // Parse date and time
-var parseTime = d3.isoParse;
+let parseTime = d3.isoParse;
 
 // Set ranges
-var x = d3.scaleTime().range([0, width]);
-var y = d3.scaleLinear().range([height, 0]);
+let x = d3.scaleTime().range([0, width]);
+let y = d3.scaleLinear().range([height, 0]);
 
 // Scale the range of the data
 x.domain(d3.extent(data, function (d) {
@@ -27,27 +27,27 @@ y.domain([d3.min(data, function (d) {
 
 
 // Price line
-var line_price = d3.line()
+let line_price = d3.line()
     .x(function (d) { return x(d.date); })
     .y(function (d) { return y(d.price); });
 
 // Bollinger Bands
-var line_bbands_hi = d3.line()
+let line_bbands_hi = d3.line()
     .x(function (d) { return x(d.date); })
     .y(function (d) { return y(d.bbands_hi); });
 
-var line_bbands_mid = d3.line()
+let line_bbands_mid = d3.line()
     .x(function (d) { return x(d.date); })
     .y(function (d) { return y(d.bbands_mid); });
 
-var line_bbands_lo = d3.line()
+let line_bbands_lo = d3.line()
     .x(function (d) { return x(d.date); })
     .y(function (d) { return y(d.bbands_lo); });
 
 // append the svg obgect to the body of the page
 // appends a 'group' element to 'svg'
 // moves the 'group' element to the top left margin
-var svg = d3.select('#chart')
+let svg = d3.select('#main-chart')
     .append('svg')
     .attr('width', width + margin.left + margin.right)
     .attr('height', height + margin.top + margin.bottom)
