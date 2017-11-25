@@ -16,7 +16,8 @@
     "pug": "2.0.0-beta11",
     "request": "^2.83.0",
     "request-promise-native": "^1.0.5",
-    "serve-favicon": "~2.4.5"
+    "serve-favicon": "~2.4.5",
+    "talib": "^1.0.3"
   },
   "devDependencies": {
     "nodemon": "^1.12.1",
