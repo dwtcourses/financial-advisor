@@ -27,7 +27,7 @@ router.get('/add', async (req, res, next) => {
     }
     try {
         clients = await request.get(options);
-        return res.render('portfolio_add', {clients: clients})
+        return res.render('portfolio_add', {clients: clients, url: '/portfolios/add'})
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error getting clients')

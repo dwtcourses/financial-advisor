@@ -21,7 +21,7 @@ router.get('/', async (req, res, next) => {
 
 /* GET clients add new page */
 router.get('/add', async (req, res, next) => {
-    return res.render('client_add')
+    return res.render('client_add', {url: '/clients/add'})
 });
 
 /* POST create new client */
