@@ -11,13 +11,6 @@ var margin = {
 // Parse date and time
 var parseTime = d3.isoParse;
 
-// Format data
-var data = prices;
-data.forEach(function (d) {
-    d.date = parseTime(d.end_of_date);
-    d.price = +d.price;
-});
-
 // Set ranges
 var x = d3.scaleTime().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);

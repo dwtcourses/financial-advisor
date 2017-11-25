@@ -57,9 +57,9 @@ function bbands (values) {
             optInMAType: 0
         }, function (err, res) {
             resolve({
-                bband_hi: res.result.outRealUpperBand,
-                bband_mid: res.result.outRealMiddleBand,
-                bband_lo: res.result.outRealLowerBand
+                bbands_hi: res.result.outRealUpperBand,
+                bbands_mid: res.result.outRealMiddleBand,
+                bbands_lo: res.result.outRealLowerBand
             })
         })
     })
@@ -109,12 +109,22 @@ router.get('/details/:figi_id', async (req, res, next) => {
         let rsi_data = indices[1]
         let bbands_data = indices[2]
 
+        // Combine processed data with prices
+        let data = prices;
+        data.forEach(function (d, i) {
+            d.date = Date.parse(d.end_of_date);
+            d.price = +d.price;
+            d.rsi = rsi_data.rsi_data[i]
+            d.bbands_hi = bbands_data.bbands_hi[i]
+            d.bbands_mid = bbands_data.bbands_mid[i]
+            d.bbands_lo = bbands_data.bbands_lo[i]
+            d.macd = macd_data.macd[i]
+            d.macd_signal = macd_data.macd_signal[i]
+            d.macd_hist = macd_data.macd_hist[i]
+        });
         return res.render('security_detail', {
             security: details,
-            prices: prices,
-            rsi: rsi_data,
-            macd: macd_data,
-            bbands: bbands_data
+            data: data,
         })
     } catch (err) {
         console.log(err)
