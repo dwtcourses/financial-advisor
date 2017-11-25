@@ -1,5 +1,23 @@
-.line {
+#line-price {
+    fill: none;
+    stroke: blue;
+    stroke-width: 2.0px;
+}
+
+#line-bbands-hi {
+    fill: none;
+    stroke: red;
+    stroke-width: 0.7px;
+}
+
+#line-bbands-mid {
     fill: none;
     stroke: steelblue;
-    stroke-width: 1.5px;
+    stroke-width: 1.0px;
+}
+
+#line-bbands-lo {
+    fill: none;
+    stroke: red;
+    stroke-width: 1.0px;
 }
