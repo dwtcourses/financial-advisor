@@ -1,4 +1,3 @@
-console.log('hello')
 $(document).ready(function() {
     $('#client_id').change(function () {
         let client_id = $(this).val();

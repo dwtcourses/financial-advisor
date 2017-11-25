@@ -1,7 +1,14 @@
 extends layout
 
-block content
+append styles
+  link(href='/stylesheets/security_chart.css', rel='stylesheet')
 
+block scripts
+  script(type='text/javascript').
+    var prices = !{JSON.stringify(prices)}
+  script(src='/javascripts/security_chart.js')
+
+block content
   .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
     .page-header
       h1= security.ticker
@@ -25,3 +32,4 @@ block content
               td= security.company_name
               td= security.sector
               td= security.industry
+    .div#chart
