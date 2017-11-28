@@ -29,7 +29,7 @@ block content
                 td= val.industry || 'N/A'
                 td
                   if val.figi_id
-                    a(href='/securities/details/' + val.figi_id) Security
+                    a(href='/securities/details/' + val.figi_id)= val.ticker
                   else
                     N/A
 
