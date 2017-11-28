@@ -15,4 +15,10 @@ module.exports = function(app) {
     // Single client
     app.route('/securities/:figi_id/prices')
         .get(security_controller.list_security_prices)
+
+    // Security aggregation
+    app.route('/securities_analysis/top_gainers')
+        .get(security_controller.list_top_gainers)
+    app.route('/securities_analysis/top_losers')
+        .get(security_controller.list_top_losers)
 }

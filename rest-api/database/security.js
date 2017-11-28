@@ -35,6 +35,41 @@ module.exports = class Security {
         }
     }
 
+    /** Get top gaining securities
+     * @param {string} date - past date to compare current prices
+     * @return promise of SQL query
+     */
+    get_top_gainers(date) {
+        let command = ' \
+            SELECT S.*, PR.price as current_price, P.price previous_price, ((PR.price / P.price) - 1.0) * 100 as percent_change \
+            FROM security AS S \
+            JOIN price_recent PR ON PR.figi_id=S.figi_id \
+            JOIN price P ON P.figi_id=S.figi_id \
+            WHERE P.end_of_date=$1 AND PR.date > $1 \
+            ORDER BY percent_change DESC \
+            LIMIT 100'
+        let params = [date]
+        return this.db_pool.query(command, params)
+    }
+
+
+    /** Get top losing securities
+     * @param {string} date - past date to compare current prices
+     * @return promise of SQL query
+     */
+    get_top_losers(date) {
+        let command = ' \
+            SELECT S.*, PR.price as current_price, P.price previous_price, ((PR.price / P.price) - 1.0) * 100 as percent_change \
+            FROM security AS S \
+            JOIN price_recent PR ON PR.figi_id=S.figi_id \
+            JOIN price P ON P.figi_id=S.figi_id \
+            WHERE P.end_of_date=$1 AND PR.date > $1 \
+            ORDER BY percent_change ASC \
+            LIMIT 100'
+        let params = [date]
+        return this.db_pool.query(command, params)
+    }
+
     /** Get a security by figi_id
      * @param {string} figi_id - primary id of the security
      * @return promise of SQL query

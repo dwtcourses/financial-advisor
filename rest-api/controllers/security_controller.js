@@ -5,10 +5,31 @@ exports.list_all_securities = async (req, res) => {
     try {
         let query_result = await req.app.get('db').security.get_all(req.query.name, req.query.ticker)
         return res.json(query_result.rows)
-        //TODO: Paging, optional query search
+        //TODO: Paging
     } catch (err) {
         console.log (err)
         return res.status(500).json('Error retrieving all securities')
+    }
+}
+
+/* List aggregated data */
+exports.list_top_gainers = async (req, res) => {
+    try {
+        let query_result = await req.app.get('db').security.get_top_gainers(req.query.date)
+        return res.json(query_result.rows)
+    } catch (err) {
+        console.log (err)
+        return res.status(500).json('Error retrieving top securities')
+    }
+}
+
+exports.list_top_losers = async (req, res) => {
+    try {
+        let query_result = await req.app.get('db').security.get_top_losers(req.query.date)
+        return res.json(query_result.rows)
+    } catch (err) {
+        console.log (err)
+        return res.status(500).json('Error retrieving top securities')
     }
 }
 
