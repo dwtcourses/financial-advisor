@@ -10,7 +10,7 @@ var portfolios = require('./routes/portfolios');
 var clients = require('./routes/clients');
 var recommendations = require('./routes/recommendations');
 var securities = require('./routes/securities');
-// var companies = require('./routes/companies');
+var companies = require('./routes/companies');
 //TODO: Enable all
 
 var app = express();
@@ -32,7 +32,7 @@ app.use('/portfolios', portfolios);
 app.use('/clients', clients);
 app.use('/recommendations', recommendations);
 app.use('/securities', securities);
-// app.use('/companies', companies);
+app.use('/companies', companies);
 //TODO: Enable all
 
 // catch 404 and forward to error handler

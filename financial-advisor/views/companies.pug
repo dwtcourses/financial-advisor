@@ -1,0 +1,37 @@
+extends layout
+
+block content
+  .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+    h1.page-header Portfolios
+    .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Company ID
+              th Name
+              th CEO
+              th Description
+              th HQ Address
+              th Number of Employees
+              th Sector
+              th Industry
+              th Securities
+          tbody
+            each val in companies
+              tr
+                td= val.company_id
+                td= val.company_name
+                td= val.ceo_name || 'N/A'
+                td= val.company_description || 'N/A'
+                td= val.hq_address || 'N/A'
+                td= val.num_employees || 'N/A'
+                td= val.sector || 'N/A'
+                td= val.industry || 'N/A'
+                td
+                  if val.figi_id
+                    a(href='/securities/details/' + val.figi_id) Security
+                  else
+                    N/A
+
+
+
