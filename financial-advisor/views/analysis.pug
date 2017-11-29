@@ -1,0 +1,59 @@
+extends layout
+
+block content
+  .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
+    .page-header
+      h1 Top Gainers and Losers
+    .table-responsive
+      table.table.table-striped
+        thead
+          tr
+            th FIGI ID
+            th Name
+            th Ticker
+            th Type
+            th Exchange
+            th Details
+            th Price Before
+            th Price Now
+            th Percent Change
+        tbody
+          each val in gainers
+            tr
+              td= val.figi_id
+              td= val.security_name
+              td= val.ticker
+              td= val.security_type
+              td= val.exchange
+              td= val.previous_price
+              td= val.current_price
+              td= val.percent_change
+              td
+                a(href='/securities/details/' + val.figi_id) Details
+
+    .table-responsive
+      table.table.table-striped
+        thead
+          tr
+            th FIGI ID
+            th Name
+            th Ticker
+            th Type
+            th Exchange
+            th Details
+            th Price Before
+            th Price Now
+            th Percent Change
+        tbody
+          each val in losers
+            tr
+              td= val.figi_id
+              td= val.security_name
+              td= val.ticker
+              td= val.security_type
+              td= val.exchange
+              td= val.previous_price
+              td= val.current_price
+              td= val.percent_change
+              td
+                a(href='/securities/details/' + val.figi_id) Details

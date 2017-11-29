@@ -11,7 +11,7 @@ var clients = require('./routes/clients');
 var recommendations = require('./routes/recommendations');
 var securities = require('./routes/securities');
 var companies = require('./routes/companies');
-//TODO: Enable all
+var analysis = require('./routes/analysis');
 
 var app = express();
 
@@ -33,7 +33,7 @@ app.use('/clients', clients);
 app.use('/recommendations', recommendations);
 app.use('/securities', securities);
 app.use('/companies', companies);
-//TODO: Enable all
+app.use('/analysis', analysis);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
