@@ -56,6 +56,7 @@ block content
                 td= val.quantity
                 td= val.current_price * val.quantity
                 td
-                  a(href='/portfolio_security/delete?portfolio_id=' + val.portfolio_id + '&figi_id=' + val.figi_id) Sell
+                  a(href='/portfolio/remove/' + val.portfolio_id) Sell
+                  //- a(href='/portfolio/remove/' + val.portfolio_id + '?figi_id=' + val.figi_id) Sell
     form
       button.btn.btn-primary(formaction='/portfolio_security/buy') Buy

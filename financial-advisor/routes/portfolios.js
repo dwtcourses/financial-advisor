@@ -88,12 +88,10 @@ router.post('/details/:portfolio_id', async (req, res, next) => {
     }
 });
 
-//TODO: DELETE portfolio only if no securities found
-
-/* GET delete client */
+/* GET delete portfolio */
 router.get('/delete/:portfolio_id', async (req, res, next) => {
     let options = {
-        uri: process.env.REST_HOST + '/clients/' + req.params.portfolio_id,
+        uri: process.env.REST_HOST + '/portfolios/' + req.params.portfolio_id,
         json: true
     }
     try {
@@ -104,5 +102,52 @@ router.get('/delete/:portfolio_id', async (req, res, next) => {
         return res.status(500).json('Error deleting client ' + req.params.portfolio_id)
     }
 });
+
+
+/* GET remove security portfolio */
+router.get('/remove/:portfolio_id', async (req, res, next) => {
+    console.log(req.params.portfolio_id)
+    // Get client details
+    let get_client_options = {
+        uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
+        json: true
+    }
+    try {
+        var client = await request.get(get_client_options);
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error getting client')
+    }
+
+    // Update client
+    client.remaining_funds += req.params.total_value;
+    let update_client_options = {
+        uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
+        form: client,
+        json: true
+    }
+    try {
+        await request.put(update_client_options)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error updating client ' + req.params.portfolio_id)
+    }
+
+    // Delete security
+    let delete_security_options = {
+        uri: process.env.REST_HOST + '/portfolio_security/' + req.params.portfolio_id,
+        form: {'figi_id': req.query.figi_id},
+        json: true
+    }
+    try {
+        client = await request.delete(delete_security_options);
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error removing security')
+    }
+
+});
+
+
 
 module.exports = router;
