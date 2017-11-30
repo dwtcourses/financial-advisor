@@ -12,6 +12,7 @@ block content
               th Client
               th Target Date
               th Strategy
+              th Total Value
               th Remaining Funds
               th Details
           tbody
@@ -22,6 +23,7 @@ block content
                 td= val.client_name
                 td= val.target_date.slice(0, 10)
                 td= val.strategy
+                td= val.value || 0.0
                 td= val.remaining_funds
                 td
                   a(href='/portfolios/' + val.portfolio_id) Details

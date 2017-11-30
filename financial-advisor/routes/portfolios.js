@@ -36,15 +36,15 @@ router.get('/add', async (req, res, next) => {
 
 /* POST create new portfolio */
 router.post('/add', async (req, res, next) => {
-    console.log(req.body)
     let options = {
         uri: process.env.REST_HOST + '/portfolios',
         form: req.body,
         json: true
     }
+    console.log(options)
     try {
         result = await request.post(options)
-        res.redirect('/portfolios/')
+        res.redirect('/portfolios')
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error creating portfolio')
@@ -53,7 +53,7 @@ router.post('/add', async (req, res, next) => {
 
 
 /* GET portfolio details */
-router.get('/:portfolio_id', async (req, res, next) => {
+router.get('/details/:portfolio_id', async (req, res, next) => {
     let options = {
         uri: process.env.REST_HOST + '/portfolios/' + req.params.portfolio_id,
         json: true
@@ -68,7 +68,7 @@ router.get('/:portfolio_id', async (req, res, next) => {
 });
 
 /* POST update portfolio details */
-router.post('/:portfolio_id', async (req, res, next) => {
+router.post('/details/:portfolio_id', async (req, res, next) => {
     console.log(req.body)
     let options = {
         uri: process.env.REST_HOST + '/portfolios/' + req.params.portfolio_id,
@@ -80,10 +80,25 @@ router.post('/:portfolio_id', async (req, res, next) => {
         res.redirect('/portfolios/' + req.params.portfolio_id)
     } catch (err) {
         console.log(err)
-        return res.status(500).json('Error updating portfolio ' + portfolio_id)
+        return res.status(500).json('Error updating portfolio ' + req.params.portfolio_id)
     }
 });
 
 //TODO: DELETE portfolio only if no securities found
+
+/* GET delete client */
+router.get('/delete/:portfolio_id', async (req, res, next) => {
+    let options = {
+        uri: process.env.REST_HOST + '/clients/' + req.params.portfolio_id,
+        json: true
+    }
+    try {
+        result = await request.delete(options)
+        res.redirect('/portfolios/')
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error deleting client ' + req.params.portfolio_id)
+    }
+});
 
 module.exports = router;
