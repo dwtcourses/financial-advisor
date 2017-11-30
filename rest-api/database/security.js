@@ -75,7 +75,7 @@ module.exports = class Security {
      * @return promise of SQL query
      */
     get(figi_id) {
-        let command = 'SELECT * FROM security JOIN company ON security.company_id = company.company_id WHERE figi_id=$1'
+        let command = 'SELECT * FROM security JOIN company ON security.company_id = company.company_id JOIN price_recent PR ON PR.figi_id=security.figi_id WHERE security.figi_id=$1'
         let params = [figi_id]
         return this.db_pool.query(command, params)
     }

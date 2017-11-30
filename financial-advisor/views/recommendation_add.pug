@@ -20,9 +20,6 @@ block content
         label.col-sm-2.col-form-label(for='portfolio_id') Portfolio:
         .col-sm-10
           select#portfolio_id.form-control(name='portfolio_id')
-            // Done dynamically in javascript
-            //- each portfolio in portfolios
-                option(value=portfolio.portfolio_id)= portfolio.portfolio_id + ' (' + portfolio.strategy + ')'
       .form-group.row
         label.col-sm-2.col-form-label(for='transaction_type') Transaction Type:
         .col-sm-10

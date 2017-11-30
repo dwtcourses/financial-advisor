@@ -4,7 +4,7 @@ block content
   .col-sm-9.col-sm-offset-3.col-md-10.col-md-offset-2.main
     h1.page-header Portfolio Details
     //TODO: Use mixins
-    form(action=url, method='post')
+    form(action=update_url, method='post')
       .form-group.row
         label.col-sm-2.col-form-label(for='portfolio_id') Portfolio ID:
         .col-sm-10
@@ -54,9 +54,19 @@ block content
                 td= val.purchase_price
                 td= val.current_price
                 td= val.quantity
-                td= val.current_price * val.quantity
+                td= (val.current_price * val.quantity).toFixed(2)
                 td
-                  a(href='/portfolio/remove/' + val.portfolio_id) Sell
-                  //- a(href='/portfolio/remove/' + val.portfolio_id + '?figi_id=' + val.figi_id) Sell
-    form
-      button.btn.btn-primary(formaction='/portfolio_security/buy') Buy
+                  a(href='/portfolios/remove/' + val.portfolio_id + '?figi_id=' + val.figi_id + '&client_id=' + portfolio.client_id + '&total_value=' + (val.current_price * val.quantity)) Sell
+
+    form(action=buy_security_url, method='post')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='quantity') Quantity:
+        .col-sm-10
+          input#quantity.form-control(name='quantity', placeholder='10')
+      .form-group.row
+        label.col-sm-2.col-form-label(for='figi_id') Security
+        .col-sm-10
+          select#figi_id.form-control(name='figi_id')
+            each security in securities
+                option(value=security.figi_id)= security.ticker + ' (' + security.security_name + ')'
+      button.btn.btn-primary(type='submit') Buy

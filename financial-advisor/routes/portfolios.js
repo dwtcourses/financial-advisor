@@ -62,9 +62,23 @@ router.get('/details/:portfolio_id', async (req, res, next) => {
         uri: process.env.REST_HOST + '/portfolio_security/' + req.params.portfolio_id,
         json: true
     }
+    let security_options = {
+        uri: process.env.REST_HOST + '/securities/',
+        json: true
+    }
     try {
-        result = await Promise.all([request.get(portfolio_options), request.get(portfolio_security_options)])
-        res.render('portfolio_detail', { portfolio: result[0], portfolio_securities: result[1], put_url: '/portfolios/' + req.params.portfolio_id });
+        result = await Promise.all([
+            request.get(portfolio_options),
+            request.get(portfolio_security_options),
+            request.get(security_options)
+        ])
+        res.render('portfolio_detail', {
+            portfolio: result[0],
+            portfolio_securities: result[1],
+            securities: result[2],
+            update_url: '/portfolios/' + req.params.portfolio_id,
+            buy_security_url: '/portfolios/add/' + req.params.portfolio_id + '?client_id=' + result[0].client_id,
+        });
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error getting portfolio ' + portfolio_id)
@@ -103,10 +117,8 @@ router.get('/delete/:portfolio_id', async (req, res, next) => {
     }
 });
 
-
 /* GET remove security portfolio */
 router.get('/remove/:portfolio_id', async (req, res, next) => {
-    console.log(req.params.portfolio_id)
     // Get client details
     let get_client_options = {
         uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
@@ -120,7 +132,7 @@ router.get('/remove/:portfolio_id', async (req, res, next) => {
     }
 
     // Update client
-    client.remaining_funds += req.params.total_value;
+    client.remaining_funds = (+(client.remaining_funds) + +(req.query.total_value)).toFixed(2)
     let update_client_options = {
         uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
         form: client,
@@ -133,6 +145,8 @@ router.get('/remove/:portfolio_id', async (req, res, next) => {
         return res.status(500).json('Error updating client ' + req.params.portfolio_id)
     }
 
+    //TODO: Use POST and prevent spurious money
+
     // Delete security
     let delete_security_options = {
         uri: process.env.REST_HOST + '/portfolio_security/' + req.params.portfolio_id,
@@ -141,6 +155,7 @@ router.get('/remove/:portfolio_id', async (req, res, next) => {
     }
     try {
         client = await request.delete(delete_security_options);
+        res.redirect('/portfolios/details/' + req.params.portfolio_id)
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error removing security')
@@ -148,6 +163,71 @@ router.get('/remove/:portfolio_id', async (req, res, next) => {
 
 });
 
+
+/* GET remove security portfolio */
+router.post('/add/:portfolio_id', async (req, res, next) => {
+    // Get recent price for security
+    let get_security_details = {
+        uri: process.env.REST_HOST + '/securities/' + req.body.figi_id,
+        form: client,
+        json: true
+    }
+    try {
+        var security = await request.get(get_security_details)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error updating client ' + req.params.portfolio_id)
+    }
+
+    // Get client details
+    let get_client_options = {
+        uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
+        json: true
+    }
+    try {
+        var client = await request.get(get_client_options);
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error getting client')
+    }
+
+    // Update client
+    client.remaining_funds = (+(client.remaining_funds) - (+(req.body.quantity) * +(security.price))).toFixed(2)
+    // Don't buy if not enough remaining funds
+    if (client.remaining_funds < 0) {
+        return res.redirect('/portfolios/details/' + req.params.portfolio_id)
+    }
+
+    let update_client_options = {
+        uri: process.env.REST_HOST + '/clients/' + req.query.client_id,
+        form: client,
+        json: true
+    }
+    try {
+        await request.put(update_client_options)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error updating client ' + req.params.portfolio_id)
+    }
+
+    req.body.purchase_price = security.price
+    req.body.portfolio_id = req.params.portfolio_id
+
+    // Insert security
+    let insert_security_options = {
+        uri: process.env.REST_HOST + '/portfolio_security/' + req.params.portfolio_id,
+        form: req.body,
+        json: true
+    }
+    console.log(insert_security_options)
+    try {
+        client = await request.post(insert_security_options);
+        res.redirect('/portfolios/details/' + req.params.portfolio_id)
+    } catch (err) {
+        console.log(err)
+        return res.status(500).json('Error adding security')
+    }
+});
 
 
 module.exports = router;
