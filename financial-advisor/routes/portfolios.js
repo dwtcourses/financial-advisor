@@ -54,13 +54,17 @@ router.post('/add', async (req, res, next) => {
 
 /* GET portfolio details */
 router.get('/details/:portfolio_id', async (req, res, next) => {
-    let options = {
+    let portfolio_options = {
         uri: process.env.REST_HOST + '/portfolios/' + req.params.portfolio_id,
         json: true
     }
+    let portfolio_security_options = {
+        uri: process.env.REST_HOST + '/portfolio_security/' + req.params.portfolio_id,
+        json: true
+    }
     try {
-        result = await request.get(options)
-        res.render('portfolio_detail', { portfolio: result, put_url: '/portfolios/' + req.params.portfolio_id });
+        result = await Promise.all([request.get(portfolio_options), request.get(portfolio_security_options)])
+        res.render('portfolio_detail', { portfolio: result[0], portfolio_securities: result[1], put_url: '/portfolios/' + req.params.portfolio_id });
     } catch (err) {
         console.log(err)
         return res.status(500).json('Error getting portfolio ' + portfolio_id)

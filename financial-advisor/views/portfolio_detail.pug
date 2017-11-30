@@ -30,3 +30,32 @@ block content
         .col-sm-10
           input#remaining_funds.form-control(name='remaining_funds', value=portfolio.remaining_funds, readonly)
       button.btn.btn-primary(type='submit') Update
+
+
+    h2.page-header Portfolio Securities
+    .table-responsive
+        table.table.table-striped
+          thead
+            tr
+              th Ticker
+              th Figi ID
+              th Purchase Date
+              th Purchase Price
+              th Current Price
+              th Quantity
+              th Total Value
+              th Sell
+          tbody
+            each val in portfolio_securities
+              tr
+                td= val.ticker
+                td= val.figi_id
+                td= val.purchase_date
+                td= val.purchase_price
+                td= val.current_price
+                td= val.quantity
+                td= val.current_price * val.quantity
+                td
+                  a(href='/portfolio_security/delete?portfolio_id=' + val.portfolio_id + '&figi_id=' + val.figi_id) Sell
+    form
+      button.btn.btn-primary(formaction='/portfolio_security/buy') Buy

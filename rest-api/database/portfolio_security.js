@@ -17,8 +17,10 @@ module.exports = class portfolio_security {
      */
     get_all(portfolio_id) {
         let command = ' \
-            SELECT * \
+            SELECT portfolio_security.*, S.ticker, PR.price as current_price \
             FROM portfolio_security \
+            JOIN security S ON S.figi_id = portfolio_security.figi_id \
+            JOIN price_recent PR ON PR.figi_id = portfolio_security.figi_id \
             WHERE portfolio_security.portfolio_id=$1'
         let params = [portfolio_id]
         return this.db_pool.query(command, params)
