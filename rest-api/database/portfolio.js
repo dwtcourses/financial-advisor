@@ -16,11 +16,11 @@ module.exports = class portfolio {
      */
     get_all() {
         let command = ' \
-            SELECT * \
+            SELECT portfolio.*, client.*, V.value \
             FROM portfolio \
             JOIN client ON client.client_id = portfolio.client_id \
             LEFT JOIN ( SELECT PS.portfolio_id, SUM(Q.price * PS.quantity) as value FROM portfolio_security as PS JOIN price_recent as Q ON Q.figi_id = PS.figi_id GROUP BY portfolio_id) \
-            as V ON V.portfolio_id = portfolio.portfolio_id'
+            as V ON portfolio.portfolio_id = V.portfolio_id'
         return this.db_pool.query(command)
     }
 
@@ -30,12 +30,12 @@ module.exports = class portfolio {
      */
     get(portfolio_id) {
         let command = ' \
-        SELECT * \
-        FROM portfolio \
-        JOIN client ON client.client_id = portfolio.client_id \
-        LEFT JOIN ( SELECT PS.portfolio_id, SUM(Q.price * PS.quantity) as value FROM portfolio_security as PS JOIN price_recent as Q ON Q.figi_id = PS.figi_id GROUP BY portfolio_id) \
-        as V ON V.portfolio_id = portfolio.portfolio_id \
-        WHERE portfolio.portfolio_id=$1'
+            SELECT portfolio.*, client.*, V.value \
+            FROM portfolio \
+            JOIN client ON client.client_id = portfolio.client_id \
+            LEFT JOIN ( SELECT PS.portfolio_id, SUM(Q.price * PS.quantity) as value FROM portfolio_security as PS JOIN price_recent as Q ON Q.figi_id = PS.figi_id GROUP BY portfolio_id) \
+            as V ON portfolio.portfolio_id = V.portfolio_id \
+            WHERE portfolio.portfolio_id=$1'
         let params = [portfolio_id]
         return this.db_pool.query(command, params)
     }
