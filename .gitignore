@@ -8,5 +8,8 @@ node_modules
 .vscode
 
 # Credential files
-intrinio_credentials.json
+intrinio_credentials*.json
 postgres_config.json
+
+# Log files
+*.log
