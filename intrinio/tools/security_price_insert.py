@@ -1,6 +1,5 @@
 import csv
 import requests
-from requests.auth import HTTPBasicAuth
 import json
 import psycopg2
 import time
@@ -68,23 +67,58 @@ def get_price(ticker, limit, intrinio_cred):
     Returns:
         list of prices in dict format mapped to SQL columns
     """
-    CLOSE_PRICE_ENDPOINT = 'https://api.intrinio.com/historical_data?identifier={ticker}&item=close_price&page_number={page_number}'
+    CLOSE_PRICE_ENDPOINT = 'https://api.intrinio.com/historical_data'
     page_number = 1
     result = {}
     prices = []
-    while (len(result) == 0) or (page_number < min(result['total_pages'], limit)):
+    while page_number < min(result.get('total_pages', float('inf')), limit):
         # Request data
-        result = requests.get(CLOSE_PRICE_ENDPOINT.format(ticker=ticker, page_number=page_number), auth=HTTPBasicAuth(intrinio_cred['API_USER'], intrinio_cred['API_KEY'])).json()
+        url = CLOSE_PRICE_ENDPOINT
+        auth = (intrinio_cred['API_USER'], intrinio_cred['API_KEY'])
+        payload = {
+            'identifier': ticker,
+            'item': 'close_price',
+            'page_number': page_number
+        }
+        result = requests.get(url, params=payload, auth=auth).json()
         # Conver to SQL column names
-        prices.extend([{'end_of_date': datapoint['date'], 'price': datapoint['value']} for datapoint in result['data']])
+        try:
+            prices.extend([{'end_of_date': datapoint['date'], 'price': datapoint['value']} for datapoint in result['data']])
+        except:
+            break
         page_number += 1
 
     return prices
 
 
 def main():
+    creds_list = [
+        '../intrinio_credentials.json',
+        '../intrinio_credentials1.json',
+        '../intrinio_credentials2.json',
+        '../intrinio_credentials3.json',
+        '../intrinio_credentials4.json',
+        '../intrinio_credentials5.json',
+        '../intrinio_credentials6.json',
+        '../intrinio_credentials7.json',
+        '../intrinio_credentials8.json',
+        '../intrinio_credentials9.json',
+        '../intrinio_credentials10.json',
+        '../intrinio_credentials11.json',
+        '../intrinio_credentials12.json',
+        '../intrinio_credentials13.json',
+        '../intrinio_credentials14.json',
+        '../intrinio_credentials15.json',
+        '../intrinio_credentials16.json',
+        '../intrinio_credentials17.json',
+        '../intrinio_credentials18.json',
+        '../intrinio_credentials19.json',
+        '../intrinio_credentials20.json',
+    ]
+    creds_idx = 0
+
     # Load credentials for Intrinio API
-    intrinio_cred = load_json('../intrinio_credentials.json')
+    intrinio_cred = load_json(creds_list[creds_idx])
 
     # Open database connection using postgres configuration file
     postgres_config = load_json('../postgres_config.json')
@@ -96,11 +130,17 @@ def main():
         for row in security_reader:
             # Get ticker to search
             ticker = row[0]
-            print(ticker)
 
-            # Get price data
-            limit = 4
-            prices = get_price(ticker, limit, intrinio_cred)
+            while creds_idx < len(creds_list):
+                try:
+                    limit = 2
+                    prices = get_price(ticker, limit, intrinio_cred)
+                    break
+                except:
+                    print('Retry same one...')
+                    creds_idx += 1
+                    intrinio_cred = load_json(creds_list[creds_idx])
+
 
             with conn.cursor() as cur:
                 cur.execute("SELECT figi_id FROM security WHERE ticker = '{ticker}'".format(ticker=ticker))
@@ -112,7 +152,8 @@ def main():
                         try:
                             cur.execute("INSERT INTO price VALUES('{figi_id}', '{end_of_date}', {price});".format(figi_id=figi_id, **price))
                         except psycopg2.IntegrityError as e:
-                            print("Integrity error {}:\n{}".format(e, price))
+                            pass
+                            # print("Integrity error {}:\n{}".format(e, price))
 
 if __name__ == '__main__':
     main()
